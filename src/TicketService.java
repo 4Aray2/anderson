@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,10 @@ public class TicketService {
         String id = "1";
         Ticket foundTicket = findTicketById(id);
         System.out.println("Found ticket: " + foundTicket);
+
+        printTicketsByStadium('A');
         printTicketsByStadium('B');
+        printTicketsByStadium('C');
     }
 
     private static Ticket findTicketById(String id) {
