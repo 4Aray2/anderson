@@ -8,9 +8,13 @@ public class TicketService {
 
     public static void main(String[] args) {
         createTickets();
-        for (Map.Entry<String, Ticket> entry : tickets.entrySet()) {
-            System.out.println(entry.getValue());
-        }
+        String id = "1";
+        Ticket foundTicket = findTicketById(id);
+        System.out.println("Found ticket: " + foundTicket);
+    }
+
+    private static Ticket findTicketById(String id) {
+        return tickets.get(id);
     }
 
     private static void createTickets() {
