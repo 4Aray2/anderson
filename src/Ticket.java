@@ -58,6 +58,10 @@ public class Ticket {
         return id;
     }
 
+    public char getStadiumSector() {
+        return stadiumSector;
+    }
+
     public long getUnixTimeNow() {
         return System.currentTimeMillis() / 1000L;
     }
