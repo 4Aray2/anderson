@@ -54,6 +54,10 @@ public class Ticket {
         this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
     }
 
+    public String getID() {
+        return ID;
+    }
+
     private long getUnixTimeNow() {
         return System.currentTimeMillis() / 1000L;
     }
