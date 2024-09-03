@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,10 +13,30 @@ public class TicketService {
         String id = "1";
         Ticket foundTicket = findTicketById(id);
         System.out.println("Found ticket: " + foundTicket);
+        printTicketsByStadium('B');
     }
 
     private static Ticket findTicketById(String id) {
         return tickets.get(id);
+    }
+
+    private static void printTicketsByStadium(char stadiumSector){
+
+        for (Ticket ticket : getTicketsByStadium(stadiumSector)){
+            System.out.println("Founded ticket: " + ticket.toString());
+        }
+    }
+    private static ArrayList<Ticket> getTicketsByStadium(char stadiumSector){
+
+        ArrayList<Ticket> foundedTickets = new ArrayList<>();
+
+        for (Ticket ticket : tickets.values()){
+            if(ticket.getStadiumSector() == stadiumSector) {
+                foundedTickets.add(ticket);
+            }
+        }
+
+        return foundedTickets;
     }
 
     private static void createTickets() {
