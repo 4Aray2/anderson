@@ -3,7 +3,7 @@ import java.util.Map;
 
 public class TicketService {
 
-    private static long ticketId = 0;
+    private static byte ticketId = 0;
     private static Map<String, Ticket> tickets;
 
     public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class TicketService {
         Map<String, Ticket> ticketMap = new HashMap<>();
         for (int i = 0; i < 10; i++) {
             Ticket ticket = getNextTicket();
-            ticketMap.put(ticket.getID(), ticket);
+            ticketMap.put(ticket.getId(), ticket);
         }
         tickets = ticketMap;
     }

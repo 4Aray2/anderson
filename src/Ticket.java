@@ -1,5 +1,5 @@
 public class Ticket {
-    private String ID;
+    private String id;
     private String concertHall;
     private String eventCode;
     private long time;
@@ -30,9 +30,9 @@ public class Ticket {
 
     // full
     // when time automatically created
-    public Ticket(String ID, String concertHall, String eventCode,
+    public Ticket(String id, String concertHall, String eventCode,
                   boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.ID = ID;
+        this.id = id;
         this.concertHall = concertHall;
         this.eventCode = eventCode;
         this.time = getUnixTimeNow();
@@ -43,9 +43,9 @@ public class Ticket {
 
     // full
     // when time manually created
-    public Ticket(String ID, String concertHall, String eventCode, long time,
+    public Ticket(String id, String concertHall, String eventCode, long time,
                   boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.ID = ID;
+        this.id = id;
         this.concertHall = concertHall;
         this.eventCode = eventCode;
         this.time = time;
@@ -54,11 +54,11 @@ public class Ticket {
         this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    private long getUnixTimeNow() {
+    public long getUnixTimeNow() {
         return System.currentTimeMillis() / 1000L;
     }
 
@@ -69,7 +69,7 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "ID=" + ID +
+                "id=" + id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode='" + eventCode + '\'' +
                 ", time=" + time +
