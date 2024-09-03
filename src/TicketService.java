@@ -1,29 +1,41 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class TicketService {
 
+    private static byte ticketId = 0;
+    private static Map<String, Ticket> tickets;
+
     public static void main(String[] args) {
-        String ID = "12AB";
+        createTickets();
+        String id = "1";
+        Ticket foundTicket = findTicketById(id);
+        System.out.println("Found ticket: " + foundTicket);
+    }
+
+    private static Ticket findTicketById(String id) {
+        return tickets.get(id);
+    }
+
+    private static void createTickets() {
+        Map<String, Ticket> ticketMap = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
+            Ticket ticket = getNextTicket();
+            ticketMap.put(ticket.getId(), ticket);
+        }
+        tickets = ticketMap;
+    }
+
+    private static Ticket getNextTicket() {
+        String ID = String.valueOf(ticketId++);
         String concertHall = "Main Hall";
         String eventCode = "001";
-        long time = System.currentTimeMillis() / 1000L;
         boolean isPromo = false;
         char stadiumSector = 'A';
         double maxAllowedBackpackWeight = 1.337;
-        
-        Ticket emptyTicket = new Ticket();
-        Ticket limitedTicket = new Ticket(concertHall, eventCode);
-        Ticket limitedTicketTime = new Ticket(concertHall, eventCode, time);
-        Ticket fullTicket = new Ticket(ID, concertHall, eventCode, isPromo, stadiumSector, maxAllowedBackpackWeight);
-        Ticket fullTicketTime = new Ticket(ID, concertHall, eventCode, time, isPromo, stadiumSector, maxAllowedBackpackWeight);
-
-        System.out.println("emptyTicket: " + emptyTicket);
-        System.out.println("limitedTicket: " + limitedTicket);
-        System.out.println("limitedTicketTime: " + limitedTicketTime);
-        System.out.println("fullTicket: " + fullTicket);
-        System.out.println("fullTicketTime: " + fullTicketTime);
-
-
         Price price = new Price(9.99, "USD");
+        Ticket fullTicket = new Ticket(ID, concertHall, eventCode, isPromo, stadiumSector, maxAllowedBackpackWeight);
         fullTicket.setPrice(price);
-        System.out.println("fullTicketTime with price: " + fullTicket);
+        return fullTicket;
     }
 }
