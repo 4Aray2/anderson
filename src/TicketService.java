@@ -14,6 +14,27 @@ public class TicketService {
         Ticket foundTicket = findTicketById(id);
         System.out.println("Found ticket: " + foundTicket);
         printTicketsByStadium('B');
+        printIsPromoTickets();
+    }
+
+    private static void printIsPromoTickets(){
+
+        for (Ticket ticket : getIsPromoTickets()){
+            System.out.println("Founded promo ticket: " + ticket.toString());
+        }
+    }
+
+    private static ArrayList<Ticket> getIsPromoTickets(){
+
+        ArrayList<Ticket> isPromoTickets = new ArrayList<>();
+
+        for (Ticket ticket : tickets.values()){
+            if(ticket.isPromo() == true) {
+                isPromoTickets.add(ticket);
+            }
+        }
+
+        return isPromoTickets;
     }
 
     private static Ticket findTicketById(String id) {
