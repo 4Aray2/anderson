@@ -58,6 +58,8 @@ public class Ticket {
         return id;
     }
 
+    public boolean isPromo() { return isPromo; }
+
     public char getStadiumSector() {
         return stadiumSector;
     }
