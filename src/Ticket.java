@@ -1,78 +1,28 @@
-public class Ticket {
-    private String ID;
-    private String concertHall;
-    private String eventCode;
-    private long time;
-    private boolean isPromo;
-    private char stadiumSector;
-    private double maxAllowedBackpackWeight;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-    private Price price;
+@Builder
+@ToString
+@Getter
+public class Ticket implements Identifiable {
 
-    // empty
-    public Ticket() {}
-
-    // limited
-    // when time automatically created
-    public Ticket(String concertHall, String eventCode) {
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = getUnixTimeNow();
-    }
-
-    // limited
-    // when time manually created
-    public Ticket(String concertHall, String eventCode, long time) {
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = time;
-    }
-
-    // full
-    // when time automatically created
-    public Ticket(String ID, String concertHall, String eventCode,
-                  boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.ID = ID;
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = getUnixTimeNow();
-        this.isPromo = isPromo;
-        this.stadiumSector = stadiumSector;
-        this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
-    }
-
-    // full
-    // when time manually created
-    public Ticket(String ID, String concertHall, String eventCode, long time,
-                  boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.ID = ID;
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = time;
-        this.isPromo = isPromo;
-        this.stadiumSector = stadiumSector;
-        this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
-    }
+    private long id;
+    private final String concertHall;
+    private final String eventCode;
+    @Builder.Default
+    private final long time = getUnixTimeNow();
+    private final boolean isPromo;
+    private final char stadiumSector;
+    private final double maxAllowedBackpackWeight;
+    private final Price price;
 
     private long getUnixTimeNow() {
         return System.currentTimeMillis() / 1000L;
     }
 
-    public void setPrice(Price price) {
-        this.price = price;
-    }
-
     @Override
-    public String toString() {
-        return "Ticket{" +
-                "ID=" + ID +
-                ", concertHall='" + concertHall + '\'' +
-                ", eventCode='" + eventCode + '\'' +
-                ", time=" + time +
-                ", isPromo=" + isPromo +
-                ", stadiumSector=" + stadiumSector +
-                ", maxAllowedBackpackWeight=" + maxAllowedBackpackWeight +
-                ", price=" + price +
-                '}';
+    public void setId(long id) {
+        this.id = id;
     }
 }
