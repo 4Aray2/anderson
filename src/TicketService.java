@@ -1,7 +1,7 @@
 public class TicketService {
 
     public static void main(String[] args) {
-        long id = 12345;
+        String id = "12AB";
         String concertHall = "Main Hall";
         String eventCode = "001";
         long time = System.currentTimeMillis() / 1000L;
@@ -53,5 +53,8 @@ public class TicketService {
         System.out.println("fullTicketCustomTime: " + fullTicketCustomTime);
         System.out.println("fullTicketDefaultTime: " + fullTicketDefaultTime);
         System.out.println("fullTicket: " + fullTicket);
+
+        fullTicket.shared("fan#1-phone");
+        fullTicket.shared("fan#1-phone", "fan#1@gmail.com");
     }
 }

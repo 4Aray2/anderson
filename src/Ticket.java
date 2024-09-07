@@ -1,28 +1,30 @@
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Builder
 @ToString
 @Getter
-public class Ticket implements Identifiable {
+@EqualsAndHashCode
+public class Ticket {
 
-    private long id;
+    private final String id;
     private final String concertHall;
     private final String eventCode;
-    @Builder.Default
-    private final long time = getUnixTimeNow();
     private final boolean isPromo;
-    private final char stadiumSector;
     private final double maxAllowedBackpackWeight;
     private final Price price;
 
-    private long getUnixTimeNow() {
-        return System.currentTimeMillis() / 1000L;
+    @Builder.Default
+    @Setter
+    private long time = System.currentTimeMillis() / 1000L;
+
+    @Setter
+    private char stadiumSector;
+
+    public void shared(String phone) {
+        System.out.printf("Ticket shared with phone: %s\n", phone);
     }
 
-    @Override
-    public void setId(long id) {
-        this.id = id;
+    public void shared(String phone, String email) {
+        System.out.printf("Ticket shared with phone: %s and email: %s\n", phone, email);
     }
 }
