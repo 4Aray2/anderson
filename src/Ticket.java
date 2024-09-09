@@ -1,88 +1,47 @@
+import lombok.*;
+
+@Builder
+@ToString
+@Getter
+@EqualsAndHashCode
 public class Ticket {
-    private String id;
-    private String concertHall;
-    private String eventCode;
-    private long time;
-    private boolean isPromo;
+
+    @NullableWarning
+    private final String id;
+
+    @NullableWarning
+    private final String concertHall;
+
+    @NullableWarning
+    private final String eventCode;
+
+    @NullableWarning
+    private final boolean isPromo;
+
+    @NullableWarning
+    private final double maxAllowedBackpackWeight;
+
+    @NullableWarning
+    private final Price price;
+
+    @NullableWarning
+    @Builder.Default
+    @Setter
+    private long time = System.currentTimeMillis() / 1000L;
+
+    @NullableWarning
+    @Setter
     private char stadiumSector;
-    private double maxAllowedBackpackWeight;
 
-    private Price price;
-
-    // empty
-    public Ticket() {}
-
-    // limited
-    // when time automatically created
-    public Ticket(String concertHall, String eventCode) {
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = getUnixTimeNow();
+    {
+        NullableWarningChecker.checkForNulls(this);
     }
 
-    // limited
-    // when time manually created
-    public Ticket(String concertHall, String eventCode, long time) {
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = time;
+    public void shared(String phone) {
+        System.out.printf("Ticket shared with phone: %s\n", phone);
     }
 
-    // full
-    // when time automatically created
-    public Ticket(String id, String concertHall, String eventCode,
-                  boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.id = id;
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = getUnixTimeNow();
-        this.isPromo = isPromo;
-        this.stadiumSector = stadiumSector;
-        this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
-    }
-
-    // full
-    // when time manually created
-    public Ticket(String id, String concertHall, String eventCode, long time,
-                  boolean isPromo, char stadiumSector, double maxAllowedBackpackWeight) {
-        this.id = id;
-        this.concertHall = concertHall;
-        this.eventCode = eventCode;
-        this.time = time;
-        this.isPromo = isPromo;
-        this.stadiumSector = stadiumSector;
-        this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isPromo() { return isPromo; }
-
-    public char getStadiumSector() {
-        return stadiumSector;
-    }
-
-    public long getUnixTimeNow() {
-        return System.currentTimeMillis() / 1000L;
-    }
-
-    public void setPrice(Price price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Ticket{" +
-                "id=" + id +
-                ", concertHall='" + concertHall + '\'' +
-                ", eventCode='" + eventCode + '\'' +
-                ", time=" + time +
-                ", isPromo=" + isPromo +
-                ", stadiumSector=" + stadiumSector +
-                ", maxAllowedBackpackWeight=" + maxAllowedBackpackWeight +
-                ", price=" + price +
-                '}';
+    public void shared(String phone, String email) {
+        System.out.printf("Ticket shared with phone: %s and email: %s\n", phone, email);
     }
 }
