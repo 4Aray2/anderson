@@ -42,10 +42,10 @@ public class Ticket {
     }
 
     public void shared(String phone) {
-        System.out.printf("entity.Ticket shared with phone: %s\n", phone);
+        System.out.printf("Ticket shared with phone: %s\n", phone);
     }
 
     public void shared(String phone, String email) {
-        System.out.printf("entity.Ticket shared with phone: %s and email: %s\n", phone, email);
+        System.out.printf("Ticket shared with phone: %s and email: %s\n", phone, email);
     }
 }
