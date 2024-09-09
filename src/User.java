@@ -1,5 +1,3 @@
-package user;
-
 public abstract class User extends Identifiable implements Printable {
 
     private final String role;

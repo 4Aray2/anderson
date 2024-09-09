@@ -1,8 +1,3 @@
-import entity.Price;
-import entity.Ticket;
-import user.Admin;
-import user.Client;
-
 import java.util.HashSet;
 import java.util.Set;
 
