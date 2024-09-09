@@ -1,5 +1,8 @@
+package user;
+
 import lombok.Getter;
 import lombok.ToString;
+import entity.Ticket;
 
 @Getter
 @ToString
