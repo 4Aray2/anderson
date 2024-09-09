@@ -6,7 +6,7 @@ public abstract class User extends Identifiable implements Printable {
         this.role = role;
     }
 
-    void printRole() {
+    protected void printRole() {
         System.out.println("Role: " + role);
     }
 }

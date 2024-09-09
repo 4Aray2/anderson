@@ -1,24 +1,33 @@
 import lombok.ToString;
 
+import java.util.Set;
+
 @ToString
 public class Admin extends User {
 
-    protected Admin(String role) {
-        super(role);
+    private final static String ADMIN = "ADMIN";
+
+    // smth like database
+    private final Set<Ticket> validTickets;
+
+    protected Admin(Set<Ticket> validTickets, int Id) {
+        super(ADMIN);
+        this.validTickets = validTickets;
+        this.Id = Id;
     }
 
     public boolean checkTicket(Ticket ticket) {
-        return Math.random() < 0.5;
+        return validTickets.contains(ticket);
     }
 
     @Override
-    public long getID() {
-        return ID;
+    public long getId() {
+        return Id;
     }
 
     @Override
-    public void setID(long ID) {
-        this.ID = ID;
+    public void setId(long id) {
+        this.Id = id;
     }
 
     @Override

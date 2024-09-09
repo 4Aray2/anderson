@@ -1,11 +1,8 @@
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public abstract class Identifiable {
-
-    long ID;
-
-    long getID() {
-        return ID;
-    }
-    void setID(long ID) {
-        this.ID = ID;
-    }
+    protected long Id;
 }
