@@ -6,7 +6,6 @@ import java.util.Set;
 public class Admin extends User {
 
     private final static String ADMIN = "ADMIN";
-
     // smth like database
     private final Set<Ticket> validTickets;
 
@@ -18,16 +17,6 @@ public class Admin extends User {
 
     public boolean checkTicket(Ticket ticket) {
         return validTickets.contains(ticket);
-    }
-
-    @Override
-    public long getId() {
-        return Id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.Id = id;
     }
 
     @Override

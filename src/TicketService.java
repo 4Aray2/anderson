@@ -21,6 +21,10 @@ public class TicketService {
         Client badClient = new Client(emptyTicket, 52);
         Admin admin = new Admin(getTickets(), 1337);
 
+        badClient.print();
+        goodClient.print();
+        admin.print();
+
         System.out.printf("Good client Id: %s\n", goodClient.getId());
         System.out.printf("Bad client Id: %s\n", badClient.getId());
         System.out.printf("Admin Id: %s\n", admin.getId());

@@ -16,7 +16,7 @@ public class NullableWarningChecker {
     private static void check(Field field, Object obj) {
         try {
             if (field.get(obj) == null) {
-                System.out.printf("Variable [%s] is null in [%s]\n", field.getName(), obj.getClass().getSimpleName());
+                System.err.printf("Variable [%s] is null in [%s]\n", field.getName(), obj.getClass().getSimpleName());
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);

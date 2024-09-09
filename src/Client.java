@@ -15,16 +15,6 @@ public class Client extends User {
     }
 
     @Override
-    public long getId() {
-        return Id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.Id = id;
-    }
-
-    @Override
     public void print() {
         System.out.println(this);
     }
