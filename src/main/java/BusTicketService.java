@@ -27,13 +27,13 @@ public class BusTicketService {
     }
 
     private static void checkTickets(Statistics statistics) {
-        List<BusTicket> busTickets = readBusTicketsFromFile(statistics);
+        List<BusTicket> busTickets = readBusTickets(statistics);
         for (BusTicket busTicket : busTickets) {
             System.out.println(busTicket);
         }
     }
 
-    private static List<BusTicket> readBusTicketsFromFile(Statistics statistics) {
+        private static List<BusTicket> readBusTickets(Statistics statistics) {
         List<BusTicket> busTickets = new ArrayList<>();
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
