@@ -1,4 +1,7 @@
+package user;
+
 import lombok.ToString;
+import entity.Ticket;
 
 import java.util.Set;
 
@@ -9,7 +12,7 @@ public class Admin extends User {
     // smth like database
     private final Set<Ticket> validTickets;
 
-    protected Admin(Set<Ticket> validTickets, int Id) {
+    public Admin(Set<Ticket> validTickets, int Id) {
         super(ADMIN);
         this.validTickets = validTickets;
         this.Id = Id;

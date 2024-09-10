@@ -1,3 +1,5 @@
+package annotation;
+
 import java.lang.reflect.Field;
 
 public class NullableWarningChecker {
