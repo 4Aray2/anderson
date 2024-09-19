@@ -18,11 +18,11 @@ public class ArrayList {
         length = 0;
     }
 
-    public int length() {
+    public int getLength() {
         return length;
     }
 
-    public int size() {
+    public int getSize() {
         return size;
     }
 
@@ -43,13 +43,14 @@ public class ArrayList {
     }
 
     public void delete(int index) {
-        if (0 <= index && index < length) {
-            for (int i = index; i < length; i++) {
-                array[i] = array[i + 1];
-            }
+        if (0 > index || index >= length) {
+            return;
+        }
+
+        for (int i = index; i < length; i++) {
+            array[i] = array[i + 1];
         }
         length--;
-
         if (length <= size / 3) {
             size /= 2;
             int[] newArr = new int[size];

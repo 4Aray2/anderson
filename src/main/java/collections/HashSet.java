@@ -3,15 +3,6 @@ package collections;
 import java.util.Iterator;
 
 public class HashSet implements Iterable<Integer> {
-    class ListNode {
-        int val;
-        ListNode next;
-
-        public ListNode(int val) {
-            this.val = val;
-        }
-    }
-
     private ListNode[] set;
     private int buckets;
 
@@ -60,7 +51,7 @@ public class HashSet implements Iterable<Integer> {
 
     @Override
     public Iterator<Integer> iterator() {
-        return new Iterator<Integer>() {
+        return new Iterator<>() {
             private int bucketIndex = 0;
             private ListNode currentNode = set[bucketIndex];
 
@@ -99,5 +90,14 @@ public class HashSet implements Iterable<Integer> {
                 return currentNode.val;
             }
         };
+    }
+
+    class ListNode {
+        int val;
+        ListNode next;
+
+        public ListNode(int val) {
+            this.val = val;
+        }
     }
 }
