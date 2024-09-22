@@ -20,10 +20,10 @@ public class DatabaseService {
         User user = User.builder()
                 .name("marceline")
                 .build();
-        userDao.save(user);
+        Long userId = userDao.save(user);
         System.out.println("user saved!");
 
-        System.out.println("found user: " + userDao.findById(user.getId()));
+        System.out.println("found user: " + userDao.findById(userId));
 
         userDao.deleteById(user.getId());
         System.out.println("user deleted");
@@ -38,19 +38,14 @@ public class DatabaseService {
                 .ticketType(TicketType.DAY)
                 .user(userDao.findById(1L))
                 .build();
-        ticketDao.save(dailyTicket);
+        Long dailyTicketId = ticketDao.save(dailyTicket);
         System.out.println("daily ticket saved!");
 
-        System.out.println("found ticket: " + ticketDao.findById(dailyTicket.getId()));
+        System.out.println("found ticket: " + ticketDao.findById(dailyTicketId));
 
-        ticketDao.updateTicketTypeById(dailyTicket.getId(), TicketType.MONTH);
+        Long monthlyTicketId = ticketDao.updateTicketTypeById(dailyTicket.getId(), TicketType.MONTH);
         System.out.println("updated ticket type");
-        System.out.println("found ticket: " + ticketDao.findById(dailyTicket.getId()));
-
-        ticketDao.deleteById(dailyTicket.getId());
-        System.out.println("ticket deleted");
-
-        System.out.println("found ticket: " + ticketDao.findById(dailyTicket.getId()));
+        System.out.println("found ticket: " + ticketDao.findById(monthlyTicketId));
     }
 
     private static void checkTicketUserDelete() {
@@ -58,10 +53,10 @@ public class DatabaseService {
         User user = User.builder()
                 .name("marceline")
                 .build();
-        userDao.save(user);
+        Long userId = userDao.save(user);
         System.out.println("user saved!");
 
-        System.out.println("found user: " + userDao.findById(user.getId()));
+        System.out.println("found user: " + userDao.findById(userId));
 
 
         TicketDao ticketDao = DaoFactory.createTicketDao();
@@ -69,18 +64,18 @@ public class DatabaseService {
                 .ticketType(TicketType.DAY)
                 .user(user)
                 .build();
-        ticketDao.save(dailyTicket);
+        Long dailyTicketId = ticketDao.save(dailyTicket);
         System.out.println("dailyTicket saved!");
 
         Ticket weeklyTicket = Ticket.builder()
                 .ticketType(TicketType.WEEK)
                 .user(user)
                 .build();
-        ticketDao.save(weeklyTicket);
+        Long weeklyTicketId = ticketDao.save(weeklyTicket);
         System.out.println("weeklyTicket saved!");
 
-        System.out.println("found dailyTicket: " + ticketDao.findById(dailyTicket.getId()));
-        System.out.println("found weeklyTicket: " + ticketDao.findById(weeklyTicket.getId()));
+        System.out.println("found dailyTicket: " + ticketDao.findById(dailyTicketId));
+        System.out.println("found weeklyTicket: " + ticketDao.findById(weeklyTicketId));
 
         userDao.deleteById(user.getId());
         System.out.println("user deleted");

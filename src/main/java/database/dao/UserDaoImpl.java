@@ -3,81 +3,118 @@ package database.dao;
 import database.DataBaseException;
 import database.DatabaseConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 
 public class UserDaoImpl implements UserDao {
+
+    private static final String INSERT = "INSERT INTO \"user\" (\"name\") VALUES (?)";
+    private static final String SELECT = "SELECT * FROM \"user\" WHERE id = ?";
+    private static final String DELETE_USER = "DELETE FROM \"user\" WHERE id = ?";
+    private static final String DELETE_TICKETS = "DELETE FROM \"user\" WHERE id = ?";
 
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final String CREATION_DATE = "creation_date";
 
     @Override
-    public void save(User user) {
-        String sql = "INSERT INTO \"user\" (\"name\") VALUES (?)";
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, user.getName());
-            int rowsAffected = ps.executeUpdate();
+    public Long save(User user) {
+        Connection connection = null;
+        Savepoint savepoint;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            connection.setAutoCommit(false);
 
-            if(rowsAffected > 0) {
-                ResultSet result = ps.getGeneratedKeys();
-                if(result.next()) {
-                    long id = result.getLong(ID);
-                    user.setId(id);
+            savepoint = connection.setSavepoint("USER_INSERT");
+
+            try (PreparedStatement ps = connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, user.getName());
+                ps.executeUpdate();
+
+                try (ResultSet resultSet = ps.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        long id = resultSet.getLong(ID);
+                        connection.commit();
+                        return id;
+                    } else {
+                        throw new DataBaseException("Cannot retrieve generated user id");
+                    }
                 }
-            } else {
-                throw new DataBaseException("did not saved properly!");
+            } catch (SQLException e) {
+                if (savepoint != null) {
+                    connection.rollback(savepoint);
+                }
+                throw new DataBaseException("Failed to create user: " + e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to connect to database: " + e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
     @Override
     public User findById(Long id) {
-        String sql = "SELECT * FROM \"user\" WHERE id = ?";
         try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = connection.prepareStatement(SELECT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return  User.builder()
-                        .id(rs.getLong(ID))
-                        .name(rs.getString(NAME))
-                        .createdDate(rs.getObject(CREATION_DATE, LocalDate.class))
-                        .build();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return User.builder()
+                            .id(rs.getLong(ID))
+                            .name(rs.getString(NAME))
+                            .createdDate(rs.getObject(CREATION_DATE, LocalDate.class))
+                            .build();
+                }
             }
+
             return null;
         } catch (SQLException e) {
-            throw new DataBaseException(e.getMessage());
+            throw new DataBaseException("Failed to find user " + e.getMessage());
         }
     }
 
     @Override
     public void deleteById(Long id) {
-        deleteUserTickets(id);
-        String sql = "DELETE FROM \"user\" WHERE id = ?";
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            ps.executeUpdate();
+        Connection connection = null;
+        Savepoint savepoint;
+
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            connection.setAutoCommit(false);
+
+            savepoint = connection.setSavepoint("USER_DELETE");
+
+            try {
+                deleteUserTickets(id, connection);
+
+                try (PreparedStatement ps = connection.prepareStatement(DELETE_USER)) {
+                    ps.setLong(1, id);
+                    ps.executeUpdate();
+                }
+
+                connection.commit();
+            } catch (SQLException e) {
+                if (savepoint != null) {
+                    connection.rollback(savepoint);
+                }
+                throw new DataBaseException("Failed to delete user: " + e.getMessage());
+            }
         } catch (SQLException e) {
-            throw new DataBaseException(e.getMessage());
+            throw new DataBaseException("Failed to connect to database: " + e.getMessage());
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
-    private void deleteUserTickets(Long id) {
-        User userToDelete = findById(id);
-        TicketDao ticketDao = DaoFactory.createTicketDao();
-        List<Ticket> ticketsToDelete = ticketDao.findByUserId(userToDelete);
-        for (Ticket ticketToDelete : ticketsToDelete) {
-            ticketDao.deleteById(ticketToDelete.getId());
+    private void deleteUserTickets(Long userId, Connection connection) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(DELETE_TICKETS)) {
+            ps.setLong(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataBaseException("Exception while deleting user tickets: " + e.getMessage());
         }
     }
+
 }

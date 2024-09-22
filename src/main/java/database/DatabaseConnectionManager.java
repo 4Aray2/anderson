@@ -32,4 +32,16 @@ public class DatabaseConnectionManager {
             throw new DataBaseException(e.getMessage());
         }
     }
+
+    public static void closeConnection(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.setAutoCommit(true);
+            connection.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

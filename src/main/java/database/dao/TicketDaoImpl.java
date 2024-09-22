@@ -4,15 +4,21 @@ import database.DataBaseException;
 import database.DatabaseConnectionManager;
 import entity.TicketType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TicketDaoImpl implements TicketDao {
+
+    private static final String INSERT = "INSERT INTO ticket(user_id, ticket_type) VALUES (?, ?::ticket_type)";
+    private static final String SELECT_BY_ID = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
+            "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE t.id = ?";
+
+    private static final String SELECT_BY_USER = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
+            "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE user_id = ?";
+
+    private static final String UPDATE = "UPDATE ticket SET ticket_type=?::ticket_type WHERE id=?";
 
     private static final String ID = "id";
     private static final String USER_ID = "user_id";
@@ -22,49 +28,62 @@ public class TicketDaoImpl implements TicketDao {
     private static final String USER_CREATION_DATE = "user_creation_date";
 
     @Override
-    public void save(Ticket ticket) {
-        String sql = "INSERT INTO ticket(user_id, ticket_type) VALUES (?, ?::ticket_type)";
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setLong(1, ticket.getUser().getId());
-            ps.setString(2, ticket.getTicketType().name());
-            int rowsAffected = ps.executeUpdate();
+    public Long save(Ticket ticket) {
+        Connection connection = null;
+        Savepoint savepoint;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            connection.setAutoCommit(false);
 
-            if(rowsAffected > 0) {
-                ResultSet result = ps.getGeneratedKeys();
-                if(result.next()) {
-                    long id = result.getLong(ID);
-                    ticket.setId(id);
+            savepoint = connection.setSavepoint("TICKET_INSERT");
+
+            try (PreparedStatement ps = connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                ps.setLong(1, ticket.getUser().getId());
+                ps.setString(2, ticket.getTicketType().name());
+                ps.executeUpdate();
+
+                try (ResultSet resultSet = ps.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        long id = resultSet.getLong(ID);
+                        connection.commit();
+                        return id;
+                    } else {
+                        throw new DataBaseException("Cannot retrieve generated ticket id");
+                    }
                 }
-            } else {
-                throw new DataBaseException("did not saved properly!");
+            } catch (SQLException e) {
+                if (savepoint != null) {
+                    connection.rollback(savepoint);
+                }
+                throw new DataBaseException("Failed to create ticket: " + e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to connect to database: " + e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 
     @Override
     public Ticket findById(Long id) {
-        String sql = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
-                "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE t.id = ?";
         try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = connection.prepareStatement(SELECT_BY_ID, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return Ticket.builder()
-                        .id(rs.getLong(ID))
-                        .user(getUser(rs))
-                        .ticketType(TicketType.valueOf(rs.getString(TICKET_TYPE)))
-                        .creationDate(rs.getObject(CREATION_DATE, LocalDate.class))
-                        .build();
-
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Ticket.builder()
+                            .id(rs.getLong(ID))
+                            .user(getUser(rs))
+                            .ticketType(TicketType.valueOf(rs.getString(TICKET_TYPE)))
+                            .creationDate(rs.getObject(CREATION_DATE, LocalDate.class))
+                            .build();
+                }
             }
+
             return null;
         } catch (SQLException e) {
-            throw new DataBaseException(e.getMessage());
+            throw new DataBaseException("Failed to find ticeket " + e.getMessage());
         }
     }
 
@@ -78,22 +97,21 @@ public class TicketDaoImpl implements TicketDao {
 
     @Override
     public List<Ticket> findByUserId(User user) {
-        String sql = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
-                "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE user_id = ?";
+        List<Ticket> tickets = new ArrayList<>();
+
         try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = connection.prepareStatement(SELECT_BY_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, user.getId());
-            ResultSet rs = ps.executeQuery();
 
-            List<Ticket> tickets = new ArrayList<>();
-
-            while (rs.next()) {
-                tickets.add(Ticket.builder()
-                        .id(rs.getLong(ID))
-                        .user(getUser(rs))
-                        .ticketType(TicketType.valueOf(rs.getString(TICKET_TYPE)))
-                        .creationDate(rs.getObject(CREATION_DATE, LocalDate.class))
-                        .build());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    tickets.add(Ticket.builder()
+                            .id(rs.getLong(ID))
+                            .user(getUser(rs))
+                            .ticketType(TicketType.valueOf(rs.getString(TICKET_TYPE)))
+                            .creationDate(rs.getObject(CREATION_DATE, LocalDate.class))
+                            .build());
+                }
             }
 
             return tickets;
@@ -103,29 +121,39 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
-    public void updateTicketTypeById(Long ticketId, TicketType ticketType) {
+    public Long updateTicketTypeById(Long ticketId, TicketType ticketType) {
+        Connection connection = null;
+        Savepoint savepoint;
+        try {
+            connection = DatabaseConnectionManager.getConnection();
+            connection.setAutoCommit(false);
 
-        String sql = "UPDATE ticket SET ticket_type=?::ticket_type WHERE id=?";
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, ticketType.name());
-            ps.setLong(2, ticketId);
-            ps.executeUpdate();
-        }
-        catch(SQLException e) {
-            throw new DataBaseException(e.getMessage());
-        }
-    }
+            savepoint = connection.setSavepoint("UPDATE_TICKET");
 
-    @Override
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM ticket WHERE id = ?";
-        try (Connection connection = DatabaseConnectionManager.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataBaseException(e.getMessage());
+            try (PreparedStatement ps = connection.prepareStatement(UPDATE)) {
+                ps.setString(1, ticketType.name());
+                ps.setLong(2, ticketId);
+                ps.executeUpdate();
+
+                try (ResultSet resultSet = ps.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        long id = resultSet.getLong(ID);
+                        connection.commit();
+                        return id;
+                    } else {
+                        throw new DataBaseException("Cannot retrieve updated ticket id");
+                    }
+                }
+            } catch (SQLException e) {
+                if (savepoint != null) {
+                    connection.rollback(savepoint);
+                }
+                throw new DataBaseException("Failed to update ticekt: " + e);
+            }
+        } catch(SQLException e) {
+            throw new DataBaseException("Failed to connect to database: " + e);
+        } finally {
+            DatabaseConnectionManager.closeConnection(connection);
         }
     }
 }
