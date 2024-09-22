@@ -11,7 +11,7 @@ public class UserDaoImpl implements UserDao {
     private static final String INSERT = "INSERT INTO \"user\" (\"name\") VALUES (?)";
     private static final String SELECT = "SELECT * FROM \"user\" WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM \"user\" WHERE id = ?";
-    private static final String DELETE_TICKETS = "DELETE FROM \"user\" WHERE id = ?";
+    private static final String DELETE_TICKETS = "DELETE FROM ticket WHERE user_id = ?";
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -34,10 +34,11 @@ public class UserDaoImpl implements UserDao {
                 try (ResultSet resultSet = ps.getGeneratedKeys()) {
                     if (resultSet.next()) {
                         long id = resultSet.getLong(ID);
+                        user.setId(id);
                         connection.commit();
                         return id;
                     } else {
-                        throw new DataBaseException("Cannot retrieve generated user id");
+                        throw new DataBaseException("Failed to retrieve generated user id");
                     }
                 }
             } catch (SQLException e) {
@@ -99,7 +100,7 @@ public class UserDaoImpl implements UserDao {
                 if (savepoint != null) {
                     connection.rollback(savepoint);
                 }
-                throw new DataBaseException("Failed to delete user: " + e.getMessage());
+                throw new DataBaseException(" user: " + e.getMessage());
             }
         } catch (SQLException e) {
             throw new DataBaseException("Failed to connect to database: " + e.getMessage());
@@ -113,7 +114,7 @@ public class UserDaoImpl implements UserDao {
             ps.setLong(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataBaseException("Exception while deleting user tickets: " + e.getMessage());
+            throw new DataBaseException("Failed to delete user's tickets: " + e.getMessage());
         }
     }
 

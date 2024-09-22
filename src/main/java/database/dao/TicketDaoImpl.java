@@ -45,6 +45,7 @@ public class TicketDaoImpl implements TicketDao {
                 try (ResultSet resultSet = ps.getGeneratedKeys()) {
                     if (resultSet.next()) {
                         long id = resultSet.getLong(ID);
+                        ticket.setId(id);
                         connection.commit();
                         return id;
                     } else {
@@ -83,7 +84,7 @@ public class TicketDaoImpl implements TicketDao {
 
             return null;
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to find ticeket " + e.getMessage());
+            throw new DataBaseException("Failed to find ticket " + e.getMessage());
         }
     }
 
@@ -96,12 +97,12 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
-    public List<Ticket> findByUserId(User user) {
+    public List<Ticket> findByUserId(Long userId) {
         List<Ticket> tickets = new ArrayList<>();
 
         try (Connection connection = DatabaseConnectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_BY_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setLong(1, user.getId());
+            ps.setLong(1, userId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -133,22 +134,20 @@ public class TicketDaoImpl implements TicketDao {
             try (PreparedStatement ps = connection.prepareStatement(UPDATE)) {
                 ps.setString(1, ticketType.name());
                 ps.setLong(2, ticketId);
-                ps.executeUpdate();
 
-                try (ResultSet resultSet = ps.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        long id = resultSet.getLong(ID);
-                        connection.commit();
-                        return id;
-                    } else {
-                        throw new DataBaseException("Cannot retrieve updated ticket id");
-                    }
+                int affectedRows = ps.executeUpdate();
+
+                if (affectedRows > 0) {
+                    connection.commit();
+                    return ticketId;
+                } else {
+                    throw new DataBaseException("Failed to update ticket: No rows affected.");
                 }
             } catch (SQLException e) {
                 if (savepoint != null) {
                     connection.rollback(savepoint);
                 }
-                throw new DataBaseException("Failed to update ticekt: " + e);
+                throw new DataBaseException("Failed to update ticket: " + e);
             }
         } catch(SQLException e) {
             throw new DataBaseException("Failed to connect to database: " + e);
