@@ -100,7 +100,7 @@ public class UserDaoImpl implements UserDao {
                 if (savepoint != null) {
                     connection.rollback(savepoint);
                 }
-                throw new DataBaseException(" user: " + e.getMessage());
+                throw new DataBaseException("Failed to delete user: " + e.getMessage());
             }
         } catch (SQLException e) {
             throw new DataBaseException("Failed to connect to database: " + e.getMessage());

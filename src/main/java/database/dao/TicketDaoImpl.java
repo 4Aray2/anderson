@@ -49,7 +49,7 @@ public class TicketDaoImpl implements TicketDao {
                         connection.commit();
                         return id;
                     } else {
-                        throw new DataBaseException("Cannot retrieve generated ticket id");
+                        throw new DataBaseException("Failed to retrieve generated ticket id");
                     }
                 }
             } catch (SQLException e) {
