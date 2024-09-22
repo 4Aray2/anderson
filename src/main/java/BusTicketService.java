@@ -1,18 +1,8 @@
-import com.google.gson.*;
 import entity.BusTicket;
 import entity.Statistics;
+import reader.BusTicketReader;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BusTicketService {
 
