@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class BusTicket extends Identifiable {
 
     private TicketClass ticketClass;
@@ -18,28 +19,4 @@ public class BusTicket extends Identifiable {
     private LocalDate startDate;
     private Double price;
     private boolean isValid;
-
-    @Override
-    public String toString() {
-        return "BusTicket{" +
-                "Id=" + Id +
-                ", isValid=" + isValid +
-                ", ticketClass=" + ticketClass +
-                ", ticketType=" + ticketType +
-                ", startDate=" + startDate +
-                ", price=" + price +
-                '}';
-    }
-
-    enum TicketClass {
-        CLA,
-        STD
-    }
-
-    enum TicketType {
-        DAY,
-        WEEK,
-        MONTH,
-        YEAR
-    }
 }
