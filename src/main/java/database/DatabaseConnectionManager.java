@@ -19,6 +19,18 @@ public class DatabaseConnectionManager {
         }
     }
 
+    public static void closeConnection(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.setAutoCommit(true);
+            connection.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     private static Properties loadProperties() {
         Properties properties = new Properties();
         try (InputStream inputStream = DatabaseConnectionManager.class.getClassLoader().getResourceAsStream(
@@ -30,18 +42,6 @@ public class DatabaseConnectionManager {
             return properties;
         } catch (IOException e) {
             throw new DataBaseException(e.getMessage());
-        }
-    }
-
-    public static void closeConnection(Connection connection) {
-        if (connection == null) {
-            return;
-        }
-        try {
-            connection.setAutoCommit(true);
-            connection.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
     }
 }
