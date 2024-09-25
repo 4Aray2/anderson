@@ -1,7 +1,7 @@
-package entity;
+package ticket.model;
 
-import annotation.NullableWarning;
-import annotation.NullableWarningChecker;
+import ticket.annotation.NullableWarning;
+import ticket.annotation.NullableWarningChecker;
 import lombok.*;
 
 @Builder

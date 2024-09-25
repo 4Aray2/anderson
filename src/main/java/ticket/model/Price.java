@@ -1,4 +1,4 @@
-package entity;
+package ticket.model;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,11 @@
+package service;
+
 import collections.ArrayList;
 import collections.HashSet;
 
 public class CollectionService {
-    public static void main(String[] args) {
-        arrayTest();
-        setTest();
-    }
 
-    private static void arrayTest() {
+    public void arrayTest() {
         ArrayList arrayList = new ArrayList(5);
         arrayList.put(1);
         arrayList.put(2);
@@ -34,7 +32,7 @@ public class CollectionService {
 //        System.out.println(arrayList.get(3)); // ArrayIndexOutOfBoundsException
     }
 
-    private static void setTest() {
+    public void setTest() {
         HashSet set = new HashSet();
         set.put(1);
         set.put(1);

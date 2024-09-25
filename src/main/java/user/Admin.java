@@ -1,7 +1,7 @@
 package user;
 
 import lombok.ToString;
-import entity.Ticket;
+import ticket.model.Ticket;
 
 import java.util.Set;
 

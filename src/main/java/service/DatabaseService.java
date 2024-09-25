@@ -1,21 +1,13 @@
+package service;
+
 import database.dao.*;
-import entity.TicketType;
+import database.model.Ticket;
+import database.model.User;
+import ticket.model.TicketType;
 
 public class DatabaseService {
-    public static void main(String[] args) {
-        System.out.println("USER TEST");
-        checkUser();
 
-        System.out.println();
-        System.out.println("TICKET TEST");
-        checkTicketDefault();
-
-        System.out.println();
-        System.out.println("USER DELETE WITH TICKETS TEST");
-        checkUserTicketsDelete();
-    }
-
-    private static void checkUser() {
+    public void checkUser() {
         UserDao userDao = DaoFactory.createUserDao();
         User user = User.builder()
                 .name("marceline")
@@ -30,7 +22,7 @@ public class DatabaseService {
         System.out.println("found user: " + userDao.findById(userId));
     }
 
-    private static void checkTicketDefault() {
+    public void checkTicketDefault() {
         TicketDao ticketDao = DaoFactory.createTicketDao();
         UserDao userDao = DaoFactory.createUserDao();
         User user = userDao.findById(2L);
@@ -56,7 +48,7 @@ public class DatabaseService {
         System.out.println("found ticket: " + ticketDao.findById(monthlyTicketId));
     }
 
-    private static void checkUserTicketsDelete() {
+    public void checkUserTicketsDelete() {
         UserDao userDao = DaoFactory.createUserDao();
         User user = User.builder()
                 .name("marceline")

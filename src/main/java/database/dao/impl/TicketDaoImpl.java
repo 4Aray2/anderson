@@ -1,8 +1,11 @@
-package database.dao;
+package database.dao.impl;
 
-import database.DataBaseException;
+import database.exception.DataBaseException;
 import database.DatabaseConnectionManager;
-import entity.TicketType;
+import database.model.Ticket;
+import database.dao.TicketDao;
+import database.model.User;
+import ticket.model.TicketType;
 
 import java.sql.*;
 import java.time.LocalDate;

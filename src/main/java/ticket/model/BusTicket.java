@@ -1,4 +1,4 @@
-package entity;
+package ticket.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
