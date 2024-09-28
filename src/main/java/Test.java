@@ -10,6 +10,7 @@ public class Test {
         testBusTicket();
         testCollections();
         testPlainJdbc();
+        testHibernate();
     }
 
     private static void testTicket() {
@@ -37,15 +38,26 @@ public class Test {
 
     private static void testPlainJdbc() {
         DatabaseService databaseService = new DatabaseService();
-        System.out.println("USER TEST");
+        System.out.println("JDBC USER TEST");
         databaseService.checkUser();
 
         System.out.println();
-        System.out.println("TICKET TEST");
+        System.out.println("JDBC TICKET TEST");
         databaseService.checkTicketDefault();
 
         System.out.println();
-        System.out.println("USER DELETE WITH TICKETS TEST");
+        System.out.println("JDBC USER DELETE WITH TICKETS TEST");
         databaseService.checkUserTicketsDelete();
+    }
+
+    private static void testHibernate() {
+        hibernate.Test test = new hibernate.Test();
+
+        System.out.println("HIBERNATE USER TEST");
+        test.testUserService();
+
+        System.out.println();
+        System.out.println("HIBERNATE TICKET TEST");
+        test.testTicketService();
     }
 }

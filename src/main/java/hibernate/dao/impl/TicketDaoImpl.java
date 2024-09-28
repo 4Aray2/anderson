@@ -5,14 +5,15 @@ import hibernate.model.Ticket;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import ticket.model.TicketType;
 
 @AllArgsConstructor
 public class TicketDaoImpl implements TicketDao {
 
-    private static final String FIND_BY_USER_ID = "FROM ticket t WHERE t.user_id := userId";
-    private static final String UPDATE_TICKET_TYPE = "UPDATE ticket SET ticket_type = :ticketType WHERE id = :ticketId";
+    private static final String FIND_BY_USER_ID = "FROM Ticket t WHERE t.user.id = :userId";
+    private static final String UPDATE_TICKET_TYPE = "UPDATE Ticket t SET t.ticketType = :ticketType WHERE t.id = :id";
 
     private final SessionFactory sessionFactory;
 
@@ -80,9 +81,9 @@ public class TicketDaoImpl implements TicketDao {
             try {
                 session.beginTransaction();
 
-                Query<Ticket> query = session.createQuery(UPDATE_TICKET_TYPE, Ticket.class);
+                MutationQuery query = session.createMutationQuery(UPDATE_TICKET_TYPE);
                 query.setParameter("ticketType", ticketType);
-                query.setParameter("ticketId", ticket.getId());
+                query.setParameter("id", ticket.getId());
                 query.executeUpdate();
 
                 session.getTransaction().commit();

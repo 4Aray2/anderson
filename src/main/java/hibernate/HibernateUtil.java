@@ -19,7 +19,7 @@ public class HibernateUtil {
                     .setProperty("hibernate.connection.username", "postgres")
                     .setProperty("hibernate.connection.password", "12345")
                     .setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
-                    .setProperty("hibernate.show_sql", "true")
+//                    .setProperty("hibernate.show_sql", "true")
                     .setProperty("hibernate.hbm2ddl.auto", "update")
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Ticket.class)

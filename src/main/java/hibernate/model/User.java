@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @Builder
 public class User {
 
@@ -24,8 +23,28 @@ public class User {
     private String name;
 
     @Column(name = "creation_date")
-    private LocalDate createdDate;
+    private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private List<Ticket> tickets;
+
+    @PrePersist
+    protected void onCreate() {
+        if (creationDate == null) {
+            creationDate = LocalDate.now();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", creationDate=" + creationDate +
+                ", tickets=" + tickets +
+                '}';
+    }
 }
