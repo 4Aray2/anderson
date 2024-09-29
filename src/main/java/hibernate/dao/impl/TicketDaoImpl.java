@@ -33,15 +33,11 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
-
     @Override
     public Ticket findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             try {
-                session.beginTransaction();
-                Ticket ticket = session.get(Ticket.class, id);
-                session.getTransaction().commit();
-                return ticket;
+                return session.get(Ticket.class, id);
             } catch (Exception e) {
                 if (session.getTransaction() != null && session.getTransaction().isActive()) {
                     session.getTransaction().rollback();
@@ -55,14 +51,9 @@ public class TicketDaoImpl implements TicketDao {
     public Ticket findByUserId(Long userId) {
         try (Session session = sessionFactory.openSession()) {
             try {
-                session.beginTransaction();
-
                 Query<Ticket> query = session.createQuery(FIND_BY_USER_ID, Ticket.class);
                 query.setParameter("userId", userId);
-                Ticket ticket = query.getSingleResult();
-
-                session.getTransaction().commit();
-                return ticket;
+                return query.getSingleResult();
             } catch (Exception e) {
                 if (session.getTransaction() != null && session.getTransaction().isActive()) {
                     session.getTransaction().rollback();

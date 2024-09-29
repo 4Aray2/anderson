@@ -22,6 +22,6 @@ public class DaoFactory {
     }
 
     public static DaoFactory createFactory() {
-        return new DaoFactory(HibernateUtil.getSessionFactory());
+        return new DaoFactory(HibernateUtil.getSESSION_FACTORY());
     }
 }

@@ -10,9 +10,9 @@ import java.time.LocalDate;
 
 public class UserDaoImpl implements UserDao {
 
-    private static final String INSERT = "INSERT INTO \"user\" (\"name\") VALUES (?)";
-    private static final String SELECT = "SELECT * FROM \"user\" WHERE id = ?";
-    private static final String DELETE_USER = "DELETE FROM \"user\" WHERE id = ?";
+    private static final String INSERT = "INSERT INTO users (\"name\") VALUES (?)";
+    private static final String SELECT = "SELECT * FROM users WHERE id = ?";
+    private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
     private static final String DELETE_TICKETS = "DELETE FROM ticket WHERE user_id = ?";
 
     private static final String ID = "id";

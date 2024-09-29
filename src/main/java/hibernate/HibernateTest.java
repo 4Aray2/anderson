@@ -6,7 +6,7 @@ import hibernate.service.TicketService;
 import hibernate.service.UserService;
 import ticket.model.TicketType;
 
-public class Test {
+public class HibernateTest {
     public void testUserService() {
         UserService userService = new UserService();
         TicketService ticketService = new TicketService();

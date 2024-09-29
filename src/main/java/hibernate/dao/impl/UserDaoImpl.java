@@ -32,10 +32,7 @@ public class UserDaoImpl implements UserDao {
     public User findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             try {
-                session.beginTransaction();
-                User user = session.get(User.class, id);
-                session.getTransaction().commit();
-                return user;
+                return session.get(User.class, id);
             } catch (Exception e) {
                 if (session.getTransaction() != null && session.getTransaction().isActive()) {
                     session.getTransaction().rollback();

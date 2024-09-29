@@ -1,10 +1,11 @@
+import hibernate.HibernateTest;
 import service.BusTicketService;
 import service.CollectionService;
 import service.DatabaseService;
 import service.TicketService;
 import ticket.StatisticsHelper;
 
-public class Test {
+public class Main {
     public static void main(String[] args) {
         testTicket();
         testBusTicket();
@@ -51,13 +52,13 @@ public class Test {
     }
 
     private static void testHibernate() {
-        hibernate.Test test = new hibernate.Test();
+        HibernateTest hibernateTest = new HibernateTest();
 
         System.out.println("HIBERNATE USER TEST");
-        test.testUserService();
+        hibernateTest.testUserService();
 
         System.out.println();
         System.out.println("HIBERNATE TICKET TEST");
-        test.testTicketService();
+        hibernateTest.testTicketService();
     }
 }
