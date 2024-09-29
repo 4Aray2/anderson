@@ -1,8 +1,9 @@
-package entity;
+package ticket;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ticket.model.BusTicket;
 import user.Printable;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 @ToString
 @Setter
 @Getter
-public class Statistics implements Printable {
+public class StatisticsHelper implements Printable {
 
     private int total;
     private int valid;

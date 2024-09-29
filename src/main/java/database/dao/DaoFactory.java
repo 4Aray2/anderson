@@ -1,5 +1,8 @@
 package database.dao;
 
+import database.dao.impl.TicketDaoImpl;
+import database.dao.impl.UserDaoImpl;
+
 public class DaoFactory {
 
     public static UserDao createUserDao() {

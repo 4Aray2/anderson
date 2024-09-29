@@ -1,8 +1,11 @@
-package database.dao;
+package database.dao.impl;
 
-import database.DataBaseException;
+import database.exception.DataBaseException;
 import database.DatabaseConnectionManager;
-import entity.TicketType;
+import database.model.Ticket;
+import database.dao.TicketDao;
+import database.model.User;
+import ticket.model.TicketType;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,10 +16,10 @@ public class TicketDaoImpl implements TicketDao {
 
     private static final String INSERT = "INSERT INTO ticket(user_id, ticket_type) VALUES (?, ?::ticket_type)";
     private static final String SELECT_BY_ID = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
-            "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE t.id = ?";
+            "FROM ticket t LEFT JOIN users u ON t.user_id = u.id WHERE t.id = ?";
 
     private static final String SELECT_BY_USER = "SELECT t.*, u.\"name\", u.creation_date AS user_creation_date " +
-            "FROM ticket t LEFT JOIN \"user\" u ON t.user_id = u.id WHERE user_id = ?";
+            "FROM ticket t LEFT JOIN users u ON t.user_id = u.id WHERE user_id = ?";
 
     private static final String UPDATE = "UPDATE ticket SET ticket_type=?::ticket_type WHERE id=?";
 

@@ -1,6 +1,7 @@
 package database.dao;
 
-import entity.TicketType;
+import database.model.Ticket;
+import ticket.model.TicketType;
 
 import java.util.List;
 

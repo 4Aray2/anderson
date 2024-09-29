@@ -1,5 +1,7 @@
-import entity.Price;
-import entity.Ticket;
+package service;
+
+import ticket.model.Price;
+import ticket.model.Ticket;
 import user.Admin;
 import user.Client;
 
@@ -7,21 +9,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TicketService {
-    static Ticket emptyTicket;
-    static Ticket limitedTicketCustomTime;
-    static Ticket limitedTicketDefaultTime;
-    static Ticket fullTicketCustomTime;
-    static Ticket fullTicketDefaultTime;
-    static Ticket fullTicket;
 
-    public static void main(String[] args) {
-        generateTickets();
-        printTickets();
-        share();
-        testUsers();
-    }
+    private static Ticket emptyTicket;
+    private static Ticket limitedTicketCustomTime;
+    private static Ticket limitedTicketDefaultTime;
+    private static Ticket fullTicketCustomTime;
+    private static Ticket fullTicketDefaultTime;
+    private static Ticket fullTicket;
 
-    private static void testUsers() {
+    public void testUsers() {
         Client goodClient = new Client(fullTicket, 42);
         Client badClient = new Client(emptyTicket, 52);
         Admin admin = new Admin(getTickets(), 1337);
@@ -42,20 +38,12 @@ public class TicketService {
         }
     }
 
-    private static Set<Ticket> getTickets() {
-        Set<Ticket> tickets = new HashSet<>();
-        tickets.add(fullTicket);
-        tickets.add(fullTicketCustomTime);
-        tickets.add(fullTicketDefaultTime);
-        return tickets;
-    }
-
-    private static void share() {
+    public void share() {
         fullTicket.shared("fan#1-phone");
         fullTicket.shared("fan#1-phone", "fan#1@gmail.com");
     }
 
-    private static void printTickets() {
+    public void printTickets() {
         System.out.println("emptyTicket: " + emptyTicket);
         System.out.println("limitedTicketCustomTime: " + limitedTicketCustomTime);
         System.out.println("limitedTicketDefaultTime: " + limitedTicketDefaultTime);
@@ -64,7 +52,7 @@ public class TicketService {
         System.out.println("fullTicket: " + fullTicket);
     }
 
-    private static void generateTickets() {
+    public void generateTickets() {
         String id = "12AB";
         String concertHall = "Main Hall";
         String eventCode = "001";
@@ -110,5 +98,13 @@ public class TicketService {
                 .maxAllowedBackpackWeight(maxAllowedBackpackWeight)
                 .price(new Price(9.99, "USD"))
                 .build();
+    }
+
+    private Set<Ticket> getTickets() {
+        Set<Ticket> tickets = new HashSet<>();
+        tickets.add(fullTicket);
+        tickets.add(fullTicketCustomTime);
+        tickets.add(fullTicketDefaultTime);
+        return tickets;
     }
 }

@@ -1,6 +1,6 @@
-package database.dao;
+package database.model;
 
-import entity.TicketType;
+import ticket.model.TicketType;
 import lombok.*;
 
 import java.time.LocalDate;

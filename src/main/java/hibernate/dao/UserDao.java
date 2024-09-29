@@ -1,9 +1,9 @@
-package database.dao;
+package hibernate.dao;
 
-import database.model.User;
+import hibernate.model.User;
 
 public interface UserDao {
-    Long save(User user);
+    void save(User user);
     User findById(Long id);
     void deleteById(Long id);
 }

@@ -3,8 +3,8 @@ package reader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import entity.BusTicket;
-import entity.Statistics;
+import ticket.model.BusTicket;
+import ticket.StatisticsHelper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class BusTicketReader {
 
-    public static List<BusTicket> readBusTickets(String filePath, Statistics statistics) {
+    public static List<BusTicket> readBusTickets(String filePath, StatisticsHelper statisticsHelper) {
         List<BusTicket> busTickets = new ArrayList<>();
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -29,7 +29,7 @@ public class BusTicketReader {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            busTickets = parseBusTickets(gson, reader, statistics);
+            busTickets = parseBusTickets(gson, reader, statisticsHelper);
         } catch (IOException e) {
             System.err.println("Error reading file: " + filePath);
         }
@@ -38,7 +38,7 @@ public class BusTicketReader {
         return busTickets;
     }
 
-    private static List<BusTicket> parseBusTickets(Gson gson, BufferedReader reader, Statistics statistics) throws IOException {
+    private static List<BusTicket> parseBusTickets(Gson gson, BufferedReader reader, StatisticsHelper statisticsHelper) throws IOException {
         List<BusTicket> busTickets = new ArrayList<>();
         String line;
         int lineNumber = 0;
@@ -46,13 +46,13 @@ public class BusTicketReader {
             lineNumber++;
             try {
                 BusTicket busTicket = gson.fromJson(line, BusTicket.class);
-                statistics.update(busTicket);
+                statisticsHelper.update(busTicket);
                 busTickets.add(busTicket);
             } catch (JsonSyntaxException e) {
                 System.err.println("Error parsing JSON at line " + lineNumber + " line");
             }
         }
-        statistics.updateMostPopularViolation();
+        statisticsHelper.updateMostPopularViolation();
         return busTickets;
     }
 }

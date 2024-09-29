@@ -1,4 +1,4 @@
-package entity;
+package ticket.model;
 
 public enum TicketType {
     DAY,

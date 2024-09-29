@@ -1,5 +1,7 @@
 package database;
 
+import database.exception.DataBaseException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
